@@ -2,3 +2,4 @@
 .vscode/
 builds/
 config.json
+cache.json

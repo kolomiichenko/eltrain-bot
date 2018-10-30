@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"logger"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -17,8 +18,8 @@ var (
 	bot, _ = tgbotapi.NewBotAPI(config.TelegramBotToken)
 	u      = tgbotapi.NewUpdate(0)
 
-	userCache = map[int]userCacheStruct{}
-	config    = getConfig()
+	userCache = loadCache()
+	config    = loadConfig()
 )
 
 type (
@@ -41,7 +42,31 @@ type (
 	}
 )
 
-func getConfig() configStruct {
+func loadCache() map[int]userCacheStruct {
+	file, err := os.Open("cache.json")
+	if err != nil {
+		logger.Error.Panic(err.Error())
+	}
+	decoder := json.NewDecoder(file)
+	c := map[int]userCacheStruct{}
+	if err := decoder.Decode(&c); err != nil {
+		logger.Error.Panic(err.Error())
+	}
+	return c
+}
+
+func saveCache(c map[int]userCacheStruct) {
+	file, err := os.OpenFile("cache.json", os.O_RDWR, 0644)
+	if err != nil {
+		logger.Error.Panic(err.Error())
+	}
+	encoder := json.NewEncoder(file)
+	if err := encoder.Encode(&c); err != nil {
+		logger.Error.Panic(err.Error())
+	}
+}
+
+func loadConfig() configStruct {
 	file, _ := os.Open("config.json")
 	decoder := json.NewDecoder(file)
 	c := configStruct{}
@@ -62,6 +87,12 @@ func init() {
 	bot.Debug = false
 	logger.Info.Printf("Authorized on account t.me/%s", bot.Self.UserName)
 	u.Timeout = 60
+
+	go func() {
+		for range time.Tick(1 * time.Minute) {
+			saveCache(userCache)
+		}
+	}()
 }
 
 func main() {
@@ -129,12 +160,8 @@ func main() {
 							"Email: bboywilld@gmail.com\n"+
 							"Github: <a href=\"https://github.com/kolomiichenko/eltrain-bot\">github.com/kolomiichenko/eltrain-bot</a>")
 
-					case "list":
-						out, err := json.Marshal(userCache)
-						if err != nil {
-							logger.Error.Panic(err.Error())
-						}
-						sendMarkupMessage(&update, nil, "userCache: "+string(out))
+					case "total":
+						sendMarkupMessage(&update, nil, "total users: "+strconv.Itoa(len(userCache)))
 					}
 				}
 
