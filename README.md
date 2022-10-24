@@ -7,7 +7,7 @@ You can look how to work here: [t.me/ElTrainUA_Bot](https://t.me/ElTrainUA_Bot)
 ```json
 {
   "TelegramBotToken": "YOUR_TOKEN",
-  "DefaultLanguage": "ua", // ua, ru, en
+  "DefaultLanguage": "ua", // ua, en
   "defaultDisplayMode": "1" // 1=today, 0=all days
 }
 ```
