@@ -11,7 +11,7 @@ import (
 
 	railway "github.com/kolomiichenko/swrailway-api"
 
-	"gopkg.in/telegram-bot-api.v4"
+	tgbotapi "gopkg.in/telegram-bot-api.v4"
 )
 
 var (
@@ -156,8 +156,9 @@ func main() {
 					case "author":
 						sendMarkupMessage(&update, nil, "Author of this bot:\n\n"+
 							"Andrii Kolomiichenko\n"+
-							"Telegram: @kolomiichenko\n"+
-							"Email: bboywilld@gmail.com\n"+
+							"Telegram: @andrii_pro\n"+
+							"Email: i@andrii.pro\n"+
+							"Website: <a href=\"https://andrii.pro\">andrii.pro</a>\n"+
 							"Github: <a href=\"https://github.com/kolomiichenko/eltrain-bot\">github.com/kolomiichenko/eltrain-bot</a>")
 
 					case "total":
